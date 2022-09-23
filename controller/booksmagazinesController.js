@@ -2,21 +2,39 @@ const { sortBooksAndMagazines } = require('../common/index')
 const {getBooks} =require('./booksController')
 const {getMagazines} = require('./magazinesController')
 
+let booksandmagazines;
+
 const getBooksAndMagazines = async(req,res) => {
     try{
-//         Print out all books and magazines with all their details sorted by title. This sort
-// should be done for books and magazines together.
+
         const books = await getBooks()
         const magazines = await getMagazines()
-        const booksandmagazines = [...books,...magazines]
+        booksandmagazines = [...books,...magazines]
         const arrangedOrder = sortBooksAndMagazines(booksandmagazines)
-        return res.send(arrangedOrder)
-
+        return arrangedOrder
      }catch(err) {
-         return res.status(400).json({success: false, message: `An error occurred : ${err}`})
+         return {success: false, message: `An error occurred : ${err}`}
      }
 }                                   
 
+const getBookMagazineByAuthor = async(req,res) => {
+    const { author } = req.body
+    let SearchedByAuthor=[]
+
+    if(!booksandmagazines) booksandmagazines = await getBooksAndMagazines()
+    booksandmagazines.map((item) =>{
+        item.authors=item.authors.split("|")
+    })
+
+    booksandmagazines.filter((item) =>{
+         item.authors.map((authorName) => {
+            if(authorName === author) SearchedByAuthor.push(item)
+        })
+    })
+    return res.send(SearchedByAuthor)
+}
+
 module.exports={
-    getBooksAndMagazines
+    getBooksAndMagazines,
+    getBookMagazineByAuthor
 };

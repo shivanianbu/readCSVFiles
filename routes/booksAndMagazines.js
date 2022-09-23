@@ -2,7 +2,7 @@ const express = require("express")
 const router = express.Router()
 const { getMagazines,getMagazineByIsbn } = require('../controller/magazinesController')
 const { getBooks,getBooksByIsbn } = require('../controller/booksController')
-const {getBooksAndMagazines} = require('../controller/booksmagazinesController')
+const {getBooksAndMagazines, getBookMagazineByAuthor} = require('../controller/booksmagazinesController')
 
 
 
@@ -13,6 +13,11 @@ router.post('/get-books',getBooks)
 router.post('/get-book-by-ISBN',getBooksByIsbn)
 
 // Print out all books and magazines with all their details 
-router.post('/get-books-and-magazines',getBooksAndMagazines)
+router.post('/get-books-and-magazines',async(req,res) =>{ 
+    const getDetails = await getBooksAndMagazines()
+    res.send(getDetails)
+})
+router.post('/get-by-author',getBookMagazineByAuthor)
+
 
 module.exports = router;
