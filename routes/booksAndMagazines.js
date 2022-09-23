@@ -13,7 +13,7 @@ router.post('/get-books',getBooks)
 router.post('/get-book-by-ISBN',getBooksByIsbn)
 
 // Print out all books and magazines with all their details 
-router.post('/',async(req,res) =>{ 
+router.get('/',async(req,res) =>{ 
     const getDetails = await getBooksAndMagazines()
     res.send(getDetails)
 })
